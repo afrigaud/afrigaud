@@ -1,2 +1,3 @@
 # afrigaud
-Alejandro Fernandez Rigaud
+Alejandro Fernandez Rigaud (DNI 27119674)
+# El tema elegido es

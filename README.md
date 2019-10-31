@@ -5,10 +5,10 @@ Alejandro Fernandez Rigaud (DNI 27119674)
 ## Documentacion de la API 
 ## Estudiantes
 # Obtener listado completo de estudiantes
-   Endpoint:  http://localhost:3000/estudiantes
-   Verbo: GET
-   Parametros: No tiene
-   Mensajes: 404 [No existe ningun recurso]
+#   Endpoint:  http://localhost:3000/estudiantes
+#   Verbo: GET
+#   Parametros: No tiene
+#   Mensajes: 404 [No existe ningun recurso]
 
 ## Alumno  
 # Obtener un recurso alumno en particular

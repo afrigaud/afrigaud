@@ -2,20 +2,20 @@
 Alejandro Fernandez Rigaud (DNI 27119674)
 # El tema elegido es: un servicio de gestion de alumnos
 
-## Documentacion de la API 
-## Estudiantes
-# Obtener listado completo de estudiantes
-#   Endpoint:  http://localhost:3000/estudiantes
-#   Verbo: GET
-#   Parametros: No tiene
-#   Mensajes: 404 [No existe ningun recurso]
+# Documentacion de la API 
+# Estudiantes
+## Obtener listado completo de estudiantes
+##   Endpoint:  http://localhost:3000/estudiantes
+##   Verbo: GET
+##   Parametros: No tiene
+##   Mensajes: 404 [No existe ningun recurso]
 
-## Alumno  
+# Alumno  
 # Obtener un recurso alumno en particular
-   Endpoint:  http://localhost:3000/estudiantes/alumno/:id  
-   Verbo: GET
-   Parametros: legajo
-   Mensajes: 404 [No existe un recurso con ese legajo]
+##   Endpoint:  http://localhost:3000/estudiantes/alumno/:id  
+##   Verbo: GET
+##   Parametros: legajo
+##   Mensajes: 404 [No existe un recurso con ese legajo]
 
 # Crear un recurso alumno
    Endpoint:  http://localhost:3000/estudiantes/alumno/:id  

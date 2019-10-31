@@ -62,7 +62,7 @@ Alejandro Fernandez Rigaud (DNI 27119674)
 # Crear un recurso pago
 ##   Endpoint:  http://localhost:3000/estudiantes/pago/:id  
 ##   Verbo: POST
-##   Parametros: legajo, nombre, edad, carrera 
+##   Parametros: legajo, fecha, concepto, monto 
 ##   Mensajes: 201 [Se creo el recurso], 400 [No se creo el recurso por que ya existe ese pago], 404 [No existe un recurso con ese legajo]  
 
 # Obtener un recurso saldo de un alumno en particular

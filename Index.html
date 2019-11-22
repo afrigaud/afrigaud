@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html ng-app="aplicacion">
+    <head>
+        <meta charset="utf-8" />
+        <title> Sistema de Alumnos </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+        <link type="text/css" href="/stylesheets/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    </head>
+ 	  <body>
+      <div ng-controller="Alumno">
+        	<h2> Alumno </h2>  
+        	<p> {{resultado}} </p>    
+        	<p>	
+        		<button type="button" class="btn btn-primary"  ng-click="BuscarLegajo()"> Buscar </button> 
+        		<input type="text" ng-model="legajo" placeholder="Legajo.."/>      
+        		<input type="text" ng-model="nombre" placeholder="Nombre y Apellido.."/> 
+        		<input type="text" ng-model="edad" placeholder="Edad.."/> 
+        	 	<input type="text" ng-model="carrera" placeholder="Carrera.."/>         	 
+        		<button type="button" class="btn btn-primary" ng-click="procesarAlta()"> Alta </button>
+       			<button type="button" class="btn btn-primary" ng-click="procesarModificar()"> Modificar </button>
+       			<button type="button" class="btn btn-danger" ng-click="procesarEliminar()" ng-class=""> Eliminar </button>
+       			<button type="button" class="btn btn-primary" ng-click="procesarLimpiar()"> Limpiar </button>
+        	</p> 
+        	<h4>Cursando</h4> 
+          <p> {{resultado2}} </p>
+			    <table class="table">
+				    <thead>
+                <tr>
+                 	<th>Dia</th>
+               	  <th>Turno</th>
+               	  <th>Materia</th>                 
+             	  </tr>
+            </thead>
+            <tbody>
+             		<tr ng-repeat="ins in inscripciones">                               
+               		<td> {{ins.dia}} </td>
+               		<td> {{ins.turno}} </td>
+               		<td> {{ins.materia}} </td> 
+                  <td>
+                      <button type="button" class="btn btn-danger" ng-click="EliminarCursada($index, ins)">Eliminar</button>
+                  </td>
+               	</tr>	
+            </tbody>	
+        	</table>
+      </div>    
+  		<div ng-controller="Inscripcion">
+  			<h2> Inscripcion </h2>
+  			<p> {{resultado}} </p>
+  			<p>	
+          <input type="text" ng-model="legajo2" placeholder="Legajo.."/>
+          <button type="button" class="btn btn-primary" ng-click="ListarMaterias()">  Materias</button>
+  				<button type="button" class="btn btn-primary" ng-click="procesarLimpiar()"> Limpiar </button>
+			  </p>
+			  <table class="table">
+				<caption>Oferta de Materias</caption>
+				    <thead>
+                   	<tr>
+                       	<th>Dia</th>
+                       	<th>Turno</th>
+                       	<th>Materia</th>                 
+               	  	</tr>
+            </thead>
+            <tbody>
+               		<tr ng-repeat="mat in materias">                 			
+                   		<td> {{mat.dia}} </td>
+                   		<td> {{mat.turno}} </td>
+                   		<td> {{mat.nombre}} </td> 
+                   		<td>
+                   			  <button type="button" class="btn btn-primary" ng-click="Anotar($index, mat)">Inscribir</button>
+                   		</td>                  			
+               		</tr>	
+            </tbody>	
+        </table>
+		  </div>    
+      <div ng-controller="Pagos">
+        <h2> 
+              Saldos 
+        </h2>
+        {{resultado}}
+        <p> 
+             <input type="text" ng-model="legajo3" placeholder="Legajo.."/>
+             <button type="button" class="btn btn-primary" ng-click="ListarPagos()"> Buscar</button>
+             <button type="button" class="btn btn-primary" ng-click="procesarLimpiar()"> Limpiar </button>
+        </p>
+        <table class="table"> 
+          <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Cuota</th>
+                        <th>Monto</th>     
+                    </tr>
+          </thead>
+          <tbody>
+                  <tr ng-repeat="pag in pagos">                      
+                      <td> {{pag.concepto}} </td>
+                      <td> {{pag.cuota}} </td> 
+                      <td> {{pag.saldo}} </td> 
+                      <td>
+                          <button type="button" class="btn btn-primary" ng-click="Pagar($index, pag)">Pagar</button>
+                      </td>                       
+                  </tr> 
+          </tbody>  
+        </table>
+      </div>      
+		  <script>
+
+			var controladorApp = angular.module('aplicacion', [])
+
+      controladorApp.controller('Alumno', function($scope, $http){
+				$scope.procesarLimpiar = function () {
+					$scope.legajo = '';
+					$scope.nombre = '';
+					$scope.edad = '';
+					$scope.carrera = '';
+					$scope.resultado = '';
+					$scope.resultado2 = '';
+          for (var i = $scope.inscripciones.length - 1; i >= 0; i--){
+              $scope.inscripciones.splice (i,1);
+          }
+				}
+			
+				$scope.BuscarLegajo = function () {	
+					$scope.nombre = '';
+					$scope.edad = '';
+					$scope.carrera = '';
+          $scope.resultado2 = '';
+          var URI = 'http://localhost:3000/api/alumno/:id?legajo=' + $scope.legajo;								
+					$http.get(URI).success(function(data, status, headers, config) {
+						$scope.nombre = data.nombre;
+						$scope.edad = data.edad;
+						$scope.carrera = data.carrera;
+					}).error(function (data, status, headers, config) {
+                		$scope.resultado = 'No existe ese legajo';
+            		});
+					var URI2 = 'http://localhost:3000/api/inscripcion/cursada/:id?legajo=' + $scope.legajo;								
+					$scope.inscripciones = [];
+					$http.get(URI2).success(function(data, status, headers, config) {
+						$scope.inscripciones = data;					
+					}).error(function (data, status, headers, config) {
+                		if (status == 400) {
+                			$scope.resultado2 = 'No tiene inscripciones';
+                		}              	
+            		});
+				}
+			
+				$scope.procesarAlta = function () {							
+				    var URI = 'http://localhost:3000/api/alumno/?legajo=' + $scope.legajo + '&nombre=' + $scope.nombre + '&edad='+ $scope.edad + '&carrera=' + 
+            $scope.carrera;	
+					  $http.post(URI).success(function(response) {
+						  $scope.legajo = '';
+						  $scope.nombre = '';
+						  $scope.edad = '';
+						  $scope.carrera = '';
+						  $scope.resultado = 'Se dio de alta';
+					}).error(function (data, status, headers, config) {
+                		$scope.resultado = 'Ya existe ese legajo!';
+            		});
+				}	
+
+				$scope.procesarModificar = function () {							
+				    var URI = 'http://localhost:3000/api/alumno/:id?legajo=' + $scope.legajo + '&nombre=' + $scope.nombre + '&edad='+ $scope.edad + 
+				      '&carrera=' + $scope.carrera;	
+					$http.put(URI).success(function(response) {
+						$scope.legajo = '';
+						$scope.nombre = '';
+						$scope.edad = '';
+						$scope.carrera = '';
+						$scope.resultado = 'Se modificaron los datos';
+					}).error(function (data, status, headers, config) {
+                		$scope.resultado = 'No existe ese legajo!';
+            		});
+				}
+
+				$scope.procesarEliminar = function () {	
+					var URI = 'http://localhost:3000/api/alumno/:id?legajo=' + $scope.legajo;								
+					$http.delete(URI).success(function(data, status, headers, config) {
+						$scope.legajo = '';
+						$scope.nombre = '';
+						$scope.edad = '';
+						$scope.carrera = '';
+						$scope.resultado = 'Se elimino al estudiante';
+					}).error(function (data, status, headers, config) {
+                		$scope.resultado = 'No existe ese legajo';
+            		});
+				}
+
+				$scope.EliminarCursada = function (index, ins) {	
+          $scope.resultado2 = '';
+					var URI = 'http://localhost:3000/api/inscripcion/cursada/:id?legajo=' + $scope.legajo + '&dia='	+ ins.dia + '&turno=' + ins.turno; 
+					$http.delete(URI).success(function(data, status, headers, config) {
+            $scope.inscripciones.splice(index,1);            
+					}).error(function (data, status, headers, config) {
+                		if (status == 400) {
+                			$scope.resultado2 = 'No tiene inscripciones';
+                		} else {
+                			$scope.resultado2 = 'No existe ese legajo';
+                		}                	
+            		});
+        }
+			})	
+
+      controladorApp.controller('Inscripcion', function($scope, $http){
+
+				$scope.ListarMaterias = function () {	
+					    var URI = 'http://localhost:3000/api/inscripcion/materias/';	
+					    $scope.materias = [];						
+					    $http.get(URI).success(function(data, status, headers, config) {
+						  $scope.materias = data;					
+					}).error(function (data, status, headers, config) {
+                		if (status == 400) {
+                			$scope.resultado = 'No tiene inscripciones';
+                		} else {
+                			$scope.resultado = 'No existe ese legajo';
+                		}                	
+            		});
+				}
+
+        $scope.procesarLimpiar = function () {
+          $scope.legajo2 = '';
+          $scope.resultado ='';
+          for (var i = $scope.materias.length - 1; i >= 0; i--){
+              $scope.materias.splice (i,1);
+          }
+        }
+
+				$scope.Anotar = function (index, mat) {	
+					$scope.resultado = '';
+					var URI = 'http://localhost:3000/api/inscripcion/cursada/:id?legajo=' + $scope.legajo2 + '&dia=' + mat.dia + '&turno=' + mat.turno + 
+						'&materia=' + mat.nombre;				
+					$http.post(URI).success(function(data, status, headers, config) {
+						$scope.resultado = 'Inscripcion OK'	
+            $scope.materias.splice (index,1);				
+					}).error(function (data, status, headers, config) {
+                		if (status == 423) {
+                			$scope.resultado = 'Ya esta inscripto';
+                		} else {
+                			$scope.resultado = 'No existe ese legajo';
+                		}                	
+            		});
+				}
+			})	
+
+      controladorApp.controller('Pagos', function($scope, $http){
+
+        $scope.procesarLimpiar = function () {
+          $scope.legajo3 = '';
+          $scope.resultado ='';
+          for (var i = $scope.pagos.length - 1; i >= 0; i--){
+              $scope.pagos.splice (i,1);
+          }
+        }
+
+        $scope.ListarPagos = function () { 
+          $scope.resultado = '';
+          $scope.pagos = [];
+          var URI = 'http://localhost:3000/api/pago/saldo/:id?legajo=' + $scope.legajo3;               
+          $http.get(URI).success(function(data, status, headers, config) {
+            $scope.pagos = data;
+          }).error(function (data, status, headers, config) {
+                    $scope.resultado = 'No existe ese legajo';
+                });
+        }
+
+        $scope.Pagar = function (index, pag){
+          var fecha = new Date (); 
+          var URI = 'http://localhost:3000/api/pago/:id?legajo=' + $scope.legajo3 + '&fecha=' + fecha + '&concepto=' + pag.concepto + '&monto=' + 
+            pag.monto + '&cuota=' + pag.cuota;            
+          $http.post(URI).success(function(data, status, headers, config) {
+             $scope.pagos.splice(index,1); 
+             $scope.resultado = 'Pago realizado OK';
+          }).error(function (data, status, headers, config) {
+                    $scope.resultado = 'No existe ese legajo';
+                });
+        }
+
+      })    
+	 	</script>
+    </body>
+</html>        

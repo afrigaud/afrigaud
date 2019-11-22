@@ -1,0 +1,22 @@
+{
+  "name": "api_estudiantes",
+  "version": "1.0.0",
+  "description": "API para la autogestion de los estudiantes",
+  "main": "/api",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afrigaud/afrigaud.git"
+  },
+  "author": "Alejandro Fernandez Rigaud",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/afrigaud/afrigaud/issues"
+  },
+  "homepage": "https://github.com/afrigaud/afrigaud#readme",
+  "dependencies": {
+    "express": ""
+  }
+}
